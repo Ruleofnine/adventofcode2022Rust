@@ -1,21 +1,31 @@
 #![feature(iter_array_chunks)]
+// Did myself then watched youtube video for extra guidance https://www.youtube.com/watch?v=yBJJYkC5cdk
 use std::fs;
 
 fn main() {
-    dbg!(part_two_try2());
+    dbg!(part_one());
     dbg!(part_two());
-
+    dbg!(part_two_try2());
+//
 }
-fn char_to_digit(character: char) -> i32 {
+//alternative interesting method using pattern binding found in the youtube comments
+fn priority(c: char) -> u32 {
+    match c {
+        c @ 'a'..='z' => c as u32 - 'a' as u32 + 1,
+        c @ 'A'..='Z' => c as u32 - 'A' as u32 + 27,
+        _ => panic!("Unacceptable character {c} !"),
+    }
+}
+fn char_to_digit(character: char) -> u32 {
     let (minus_amount, plus_amount) = if character.is_uppercase() {
         (64, 26)
     } else {
         (96, 0)
     };
-    let digit = character as u8;
-    digit as i32 - minus_amount + plus_amount
+    let digit = character as u32;
+    digit - minus_amount + plus_amount
 }
-fn part_one() -> i32 {
+fn part_one() -> u32 {
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
     let sections: Vec<&str> = input.split("\n").collect();
     let mut priority_sum = 0;
@@ -32,7 +42,7 @@ fn part_one() -> i32 {
     priority_sum
 }
 //My original implementation
-fn part_two() -> i32 {
+fn part_two() -> u32 {
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
     let lines: Vec<&str> = input.lines().collect();
     let mut priority_sum = 0;
@@ -47,11 +57,11 @@ fn part_two() -> i32 {
     priority_sum
 }
 //Using nightly feature and example from youtube video
-fn part_two_try2() -> i32{
+fn part_two_try2() -> u32{
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
-    let sum: i32 = input
+    let sum = input
         .lines()
-        .array_chunks::<3>()
+        .array_chunks()
         .map(|[a, b, c]| {
             char_to_digit(
                 a.chars()
