@@ -1,4 +1,4 @@
-use std::fs::{File, self};
+use std::fs::{self, File};
 use std::io::prelude::*;
 use std::path::Path;
 fn max_calories() -> u32 {
@@ -8,13 +8,14 @@ fn max_calories() -> u32 {
         .max()
         .unwrap()
 }
-fn top3_calories(){
-        let data = fs::read_to_string("inputs/day1.txt").unwrap();
-        let mut test:Vec<u32> = data
+fn top3_calories() {
+    let data = fs::read_to_string("inputs/day1.txt").unwrap();
+    let mut test: Vec<u32> = data
         .split("\n\n")
-        .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>()).collect();
-    test.sort_by(|a,b|b.cmp(a));
-    let top3:u32 = test.iter().take(3).sum();
+        .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>())
+        .collect();
+    test.sort_by(|a, b| b.cmp(a));
+    let top3: u32 = test.iter().take(3).sum();
     dbg!(top3);
 }
 fn main() {
@@ -60,13 +61,13 @@ fn day_1_test_top3() {
 9000
 
 10000";
-    let mut test:Vec<u32> = input
+    let mut test: Vec<u32> = input
         .split("\n\n")
-        .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>()).collect();
-    test.sort_by(|a,b|b.cmp(a));
+        .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>())
+        .collect();
+    test.sort_by(|a, b| b.cmp(a));
     dbg!(&test);
-    let top3:u32 = test.iter().take(3).sum();
+    let top3: u32 = test.iter().take(3).sum();
     dbg!(test);
-    assert_eq!(top3,45000);
+    assert_eq!(top3, 45000);
 }
-

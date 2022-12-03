@@ -1,17 +1,17 @@
 use std::fs;
 fn main() {
-    let input = "vJrwpWtwJgWrhcsFMMfFFhFp
-jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-PmmdzqPrVvPwwTWBwg
-wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw";
-    let lines: Vec<&str> = input.split("\n").collect();
-    let team_amount = lines.len()/3;
-    // let team1 = lines.iter().take(3);
-
+    println!("{}",part_two());
 }
-fn part_one(){
+fn char_to_digit(character: char) -> i32 {
+    let (minus_amount, plus_amount) = if character.is_uppercase() {
+        (64, 26)
+    } else {
+        (96, 0)
+    };
+    let digit = character as u8;
+    digit as i32 - minus_amount + plus_amount
+}
+fn part_one()->i32 {
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
     let sections: Vec<&str> = input.split("\n").collect();
     let mut priority_sum = 0;
@@ -25,8 +25,21 @@ fn part_one(){
             }
         }
     }
-    dbg!(priority_sum);
-
+    priority_sum 
+}
+fn part_two() -> i32{
+    let input = fs::read_to_string("inputs/day3.txt").unwrap();
+    let lines: Vec<&str> = input.lines().collect();
+    let mut priority_sum = 0;
+    for (index, line) in lines.iter().enumerate().skip(2).step_by(3) {
+        for character in line.chars() {
+            if lines[index - 1].contains(character) && lines[index - 2].contains(character) {
+                priority_sum += char_to_digit(character);
+                break;
+            }
+        }
+    }
+    priority_sum
 }
 #[test]
 fn test_char_to_digit() {
@@ -57,7 +70,6 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
     }
     assert_eq!(157, priority_sum);
 }
-
 #[test]
 fn test_example2() {
     let input = "vJrwpWtwJgWrhcsFMMfFFhFp
@@ -66,24 +78,17 @@ PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw";
-    // for section in sections {
-        // let len = section.len() / 2;
-        // let (sub1, sub2) = section.split_at(len);
-        // for character in sub1.chars() {
-            // if sub2.contains(character) {
-                // priority_sum += char_to_digit(character);
-                // break;
-            // }
-        // }
-    // }
-    // assert_eq!(157, priority_sum);
+    let lines: Vec<&str> = input.lines().collect();
+    let mut sum = 0;
+    for (index, line) in lines.iter().enumerate().skip(2).step_by(3) {
+        for character in line.chars() {
+            if lines[index - 1].contains(character) && lines[index - 2].contains(character) {
+                dbg!(character);
+                sum += char_to_digit(character);
+                break;
+            }
+        }
+    }
+    assert_eq!(70, sum);
 }
-fn char_to_digit(character: char) -> i32 {
-    let (minus_amount, plus_amount) = if character.is_uppercase() {
-        (64, 26)
-    } else {
-        (96, 0)
-    };
-    let digit = character as u8;
-    digit as i32 - minus_amount + plus_amount
-}
+

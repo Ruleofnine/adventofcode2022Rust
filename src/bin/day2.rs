@@ -1,5 +1,5 @@
 use std::fs;
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 enum RPS {
     Rock,
     Paper,
@@ -38,7 +38,7 @@ impl RPS {
             (Scissors, Scissors) => Tie,
         }
     }
-        fn loses(&self) -> RPS {
+    fn loses(&self) -> RPS {
         use RPS::*;
         match self {
             Rock => Paper,
@@ -46,7 +46,7 @@ impl RPS {
             Scissors => Rock,
         }
     }
-        fn wins(&self) -> RPS {
+    fn wins(&self) -> RPS {
         use RPS::*;
         match self {
             Rock => Scissors,
@@ -106,77 +106,97 @@ mod tests {
     }
     #[test]
     fn example_test_part1() {
-            let input = "A Y
+        let input = "A Y
 B X
 C Z";
-    let games:Vec<Vec<RPS>> = input.split("\n").map(|a|a.split(" ").map(|letter|RPS::choice(letter)).collect()).collect();
-    let mut score = 0;
-    for game in games{
-        let mut game_iter = game.iter();
-        let opponent_move = game_iter.next().unwrap();
-        let your_move = game_iter.next().unwrap();
-        let game_state= your_move.vs(opponent_move);
-        let game_score = tally_score(your_move,game_state);
-        score+=game_score
-    }
-        assert_eq!(score,15)
+        let games: Vec<Vec<RPS>> = input
+            .split("\n")
+            .map(|a| a.split(" ").map(|letter| RPS::choice(letter)).collect())
+            .collect();
+        let mut score = 0;
+        for game in games {
+            let mut game_iter = game.iter();
+            let opponent_move = game_iter.next().unwrap();
+            let your_move = game_iter.next().unwrap();
+            let game_state = your_move.vs(opponent_move);
+            let game_score = tally_score(your_move, game_state);
+            score += game_score
+        }
+        assert_eq!(score, 15)
     }
     #[test]
     fn example_test_part2() {
-            let input = "A Y
+        let input = "A Y
 B X
 C Z";
-    let games:Vec<Vec<&str>> = input.split("\n").map(|a|a.split(" ").collect()).collect();
-    let mut score = 0;
-    for game in games{
-        let mut game_iter = game.iter();
-        let opponent_move = RPS::choice(game_iter.next().unwrap());
-        let your_outcome = *game_iter.next().unwrap();
-        let needed_state = match your_outcome {
+        let games: Vec<Vec<&str>> = input.split("\n").map(|a| a.split(" ").collect()).collect();
+        let mut score = 0;
+        for game in games {
+            let mut game_iter = game.iter();
+            let opponent_move = RPS::choice(game_iter.next().unwrap());
+            let your_outcome = *game_iter.next().unwrap();
+            let needed_state = match your_outcome {
                 "X" => GameState::Lose,
                 "Y" => GameState::Tie,
                 "Z" => GameState::Win,
-                _ => panic!("not a vaild gamestate")
+                _ => panic!("not a vaild gamestate"),
             };
-        let needed_move = match needed_state {
+            let needed_move = match needed_state {
                 GameState::Lose => opponent_move.wins(),
                 GameState::Tie => opponent_move.clone(),
                 GameState::Win => opponent_move.loses(),
-
             };
             let game_state = needed_move.vs(&opponent_move);
-            let game_score = tally_score(&needed_move,game_state);
-             score+=game_score
-    }
-        assert_eq!(score,12)
+            let game_score = tally_score(&needed_move, game_state);
+            score += game_score
+        }
+        assert_eq!(score, 12)
     }
 }
-fn main() {
+fn part_one() -> i32 {
     let input = fs::read_to_string("inputs/day2.txt").unwrap();
-        let games:Vec<Vec<&str>> = input.split("\n").map(|a|a.split(" ").collect()).collect();
+    let games: Vec<Vec<RPS>> = input
+        .lines()
+        .map(|a| a.split(" ").map(|letter| RPS::choice(letter)).collect())
+        .collect();
     let mut score = 0;
-    for game in games{
-        if game.len() != 2{
-            continue
-        }
+    for game in games {
+        let mut game_iter = game.iter();
+        let opponent_move = game_iter.next().unwrap();
+        let your_move = game_iter.next().unwrap();
+        let game_state = your_move.vs(opponent_move);
+        let game_score = tally_score(your_move, game_state);
+        score += game_score
+    }
+    score
+}
+
+fn part_two() -> i32 {
+    let input = fs::read_to_string("inputs/day2.txt").unwrap();
+    let games: Vec<Vec<&str>> = input.lines().map(|a| a.split(" ").collect()).collect();
+    let mut score = 0;
+    for game in games {
         let mut game_iter = game.iter();
         let opponent_move = RPS::choice(game_iter.next().unwrap());
         let your_outcome = *game_iter.next().unwrap();
         let needed_state = match your_outcome {
-                "X" => GameState::Lose,
-                "Y" => GameState::Tie,
-                "Z" => GameState::Win,
-                _ => panic!("not a vaild gamestate")
-            };
+            "X" => GameState::Lose,
+            "Y" => GameState::Tie,
+            "Z" => GameState::Win,
+            _ => panic!("not a vaild gamestate"),
+        };
         let needed_move = match needed_state {
-                GameState::Lose => opponent_move.wins(),
-                GameState::Tie => opponent_move.clone(),
-                GameState::Win => opponent_move.loses(),
-
-            };
-            let game_state = needed_move.vs(&opponent_move);
-            let game_score = tally_score(&needed_move,game_state);
-             score+=game_score
+            GameState::Lose => opponent_move.wins(),
+            GameState::Tie => opponent_move.clone(),
+            GameState::Win => opponent_move.loses(),
+        };
+        let game_state = needed_move.vs(&opponent_move);
+        let game_score = tally_score(&needed_move, game_state);
+        score += game_score
     }
-    dbg!(score);
+    score
+}
+
+fn main() {
+    dbg!(part_one());
 }
