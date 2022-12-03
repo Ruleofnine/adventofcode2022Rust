@@ -1,6 +1,10 @@
+#![feature(iter_array_chunks)]
 use std::fs;
+
 fn main() {
-    println!("{}",part_two());
+    dbg!(part_two_try2());
+    dbg!(part_two());
+
 }
 fn char_to_digit(character: char) -> i32 {
     let (minus_amount, plus_amount) = if character.is_uppercase() {
@@ -11,7 +15,7 @@ fn char_to_digit(character: char) -> i32 {
     let digit = character as u8;
     digit as i32 - minus_amount + plus_amount
 }
-fn part_one()->i32 {
+fn part_one() -> i32 {
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
     let sections: Vec<&str> = input.split("\n").collect();
     let mut priority_sum = 0;
@@ -25,9 +29,10 @@ fn part_one()->i32 {
             }
         }
     }
-    priority_sum 
+    priority_sum
 }
-fn part_two() -> i32{
+//My original implementation
+fn part_two() -> i32 {
     let input = fs::read_to_string("inputs/day3.txt").unwrap();
     let lines: Vec<&str> = input.lines().collect();
     let mut priority_sum = 0;
@@ -40,6 +45,22 @@ fn part_two() -> i32{
         }
     }
     priority_sum
+}
+//Using nightly feature and example from youtube video
+fn part_two_try2() -> i32{
+    let input = fs::read_to_string("inputs/day3.txt").unwrap();
+    let sum: i32 = input
+        .lines()
+        .array_chunks::<3>()
+        .map(|[a, b, c]| {
+            char_to_digit(
+                a.chars()
+                    .find(|a_char| b.contains(*a_char) && c.contains(*a_char))
+                    .unwrap(),
+            )
+        })
+        .sum();
+    sum
 }
 #[test]
 fn test_char_to_digit() {
@@ -91,4 +112,3 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
     }
     assert_eq!(70, sum);
 }
-
