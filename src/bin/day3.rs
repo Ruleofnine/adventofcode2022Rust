@@ -11,8 +11,8 @@ fn main() {
 //alternative interesting method using pattern binding found in the youtube comments
 fn priority(c: char) -> u32 {
     match c {
-        c @ 'a'..='z' => c as u32 - 'a' as u32 + 1,
-        c @ 'A'..='Z' => c as u32 - 'A' as u32 + 27,
+        'a'..='z' => c as u32 - 'a' as u32 + 1,
+        'A'..='Z' => c as u32 - 'A' as u32 + 27,
         _ => panic!("Unacceptable character {c} !"),
     }
 }
