@@ -1,15 +1,13 @@
-use std::fs::{self, File};
-use std::io::prelude::*;
-use std::path::Path;
+use std::fs::read_to_string;
 fn max_calories() -> u32 {
-    let data = fs::read_to_string("inputs/day1.txt").unwrap();
+    let data = read_to_string("inputs/day1.txt").unwrap();
     data.split("\n\n")
         .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>())
         .max()
         .unwrap()
 }
 fn top3_calories() {
-    let data = fs::read_to_string("inputs/day1.txt").unwrap();
+    let data = read_to_string("inputs/day1.txt").unwrap();
     let mut test: Vec<u32> = data
         .split("\n\n")
         .map(|x| x.lines().map(|x| x.parse::<u32>().unwrap()).sum::<u32>())

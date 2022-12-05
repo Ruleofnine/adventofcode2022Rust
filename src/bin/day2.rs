@@ -1,25 +1,22 @@
 use std::fs;
 #[derive(Debug, Clone)]
 enum RPS {
-    Rock,
-    Paper,
-    Scissors,
+    Rock = 1,
+    Paper = 2 ,
+    Scissors = 3,
 }
 #[derive(PartialEq, Debug)]
 enum GameState {
-    Win,
-    Lose,
-    Tie,
+    Win = 6,
+    Lose = 0,
+    Tie = 3,
 }
 impl RPS {
     fn choice(choice: &str) -> RPS {
         match choice {
-            "A" => RPS::Rock,
-            "B" => RPS::Paper,
-            "C" => Self::Scissors,
-            "X" => RPS::Rock,
-            "Y" => RPS::Paper,
-            "Z" => Self::Scissors,
+            "A"|"X" => RPS::Rock,
+            "B"|"Y" => RPS::Paper,
+            "C"|"Z" => Self::Scissors,
             _ => panic!("invalid game"),
         }
     }
@@ -71,7 +68,6 @@ fn tally_score(choice: &RPS, state: GameState) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn vs_tie() {
         let yours = RPS::choice("X");
@@ -170,7 +166,6 @@ fn part_one() -> i32 {
     }
     score
 }
-
 fn part_two() -> i32 {
     let input = fs::read_to_string("inputs/day2.txt").unwrap();
     let games: Vec<Vec<&str>> = input.lines().map(|a| a.split(" ").collect()).collect();
@@ -199,4 +194,5 @@ fn part_two() -> i32 {
 
 fn main() {
     dbg!(part_one());
+    dbg!(part_two());
 }
