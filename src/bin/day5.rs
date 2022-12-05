@@ -54,5 +54,8 @@ fn move_crates(part: u8) -> String {
     answer.iter().join("")
 }
 fn main() {
-    dbg!(move_crates(0));
+    //part one
+    dbg!(move_crates(1));
+    //part two
+    dbg!(move_crates(2));
 }
