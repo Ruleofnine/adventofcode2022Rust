@@ -9,8 +9,7 @@ move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
-fn move_crates(part: u8) -> String {
-    let input: String = read_to_string("inputs/day5.txt").unwrap();
+fn move_crates(part: u8,input:String) -> String {
     let data: Vec<&str> = input.split("\n\n").collect();
     let lines: Vec<&str> = data[0].split("\n").collect();
     let row_count = lines.last().unwrap().split("  ").count();
@@ -49,8 +48,18 @@ fn move_crates(part: u8) -> String {
     crates.iter().map(|c| c.last().unwrap()).collect::<String>()
 }
 fn main() {
+    let input: String = read_to_string("inputs/day5.txt").unwrap();
     //part one
-    dbg!(move_crates(1));
+    dbg!(move_crates(1,input.clone()));
     //part two
-    dbg!(move_crates(2));
+    dbg!(move_crates(2,input));
+}
+#[test]
+fn test_part_one(){
+    assert_eq!("CMZ",move_crates(1,EXAMPLE_INPUT.to_owned()))
+}
+#[test]
+fn test_part_two(){
+    assert_eq!("MCD",move_crates(2,EXAMPLE_INPUT.to_owned()))
+
 }
