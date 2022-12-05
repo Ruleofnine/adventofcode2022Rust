@@ -20,7 +20,7 @@ fn move_crates(part: u8) -> String {
         for (index, character) in i.chars().enumerate() {
             if character_range.contains(&character) {
                 let row_num = index / 4;
-                crates[row_num].insert(0,character);
+                crates[row_num].insert(0, character);
             }
         }
     }
@@ -48,7 +48,7 @@ fn move_crates(part: u8) -> String {
         }
     }
     let mut answer = Vec::<char>::new();
-    for (_, c) in crates.iter().enumerate() {
+    for  c in crates.iter() {
         answer.push(*c.last().unwrap());
     }
     answer.iter().join("")
