@@ -47,11 +47,7 @@ fn move_crates(part: u8) -> String {
             }
         }
     }
-    let mut answer = Vec::<char>::new();
-    for  c in crates.iter() {
-        answer.push(*c.last().unwrap());
-    }
-    answer.iter().join("")
+    crates.iter().map(|c|c.last().unwrap()).collect::<String>()
 }
 fn main() {
     //part one
