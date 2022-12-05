@@ -14,21 +14,15 @@ fn move_crates(part: u8) -> String {
     let data: Vec<&str> = input.split("\n\n").collect();
     let lines: Vec<&str> = data[0].split("\n").collect();
     let row_count = lines.last().unwrap().split("  ").count();
-    let mut rows: Vec<Vec<char>> = vec![vec![]; row_count];
+    let mut crates: Vec<Vec<char>> = vec![vec![]; row_count];
     let character_range = 'A'..='Z';
     for i in lines {
         for (index, character) in i.chars().enumerate() {
             if character_range.contains(&character) {
                 let row_num = index / 4;
-                rows[row_num].push(character);
+                crates[row_num].insert(0,character);
             }
         }
-    }
-    let mut crates: Vec<Vec<char>> = Vec::new();
-    //make new vecs since they need to be reveresed to work
-    for row in rows {
-        let new_crate: Vec<char> = row.iter().rev().map(|a| *a).collect();
-        crates.push(new_crate);
     }
     for i in data[1].split("\n") {
         let (amount, from, to) = i
@@ -60,5 +54,5 @@ fn move_crates(part: u8) -> String {
     answer.iter().join("")
 }
 fn main() {
-    dbg!(move_crates(1));
+    dbg!(move_crates(0));
 }
