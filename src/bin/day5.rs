@@ -1,5 +1,7 @@
 use itertools::Itertools;
 use std::fs::read_to_string;
+
+
 const EXAMPLE_INPUT: &str = "    [D]    
 [N] [C]    
 [Z] [M] [P]
@@ -9,6 +11,7 @@ move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
+
 fn move_crates(part: u8,input:String) -> String {
     let data: Vec<&str> = input.split("\n\n").collect();
     let lines: Vec<&str> = data[0].split("\n").collect();
