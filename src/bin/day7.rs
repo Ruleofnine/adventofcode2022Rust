@@ -21,50 +21,54 @@ $ ls
 8033020 d.log
 5626152 d.ext
 7214296 k";
-fn part_one(input: String) -> i32 {
-    let mut dirs: std::collections::BTreeMap<String, i32> = std::collections::BTreeMap::new();
-    let mut pwd = vec![];
+use std::collections::BTreeMap;
+fn day7(input: String) -> (i32, i32) {
+    let mut dirs: BTreeMap<String, i32> = BTreeMap::from([("/".to_string(), 0)]);
+    let mut pwd = vec!["/"];
     input
         .lines()
         .for_each(|line| match line.split(" ").collect::<Vec<&str>>()[..] {
-            ["$", "cd", "/"] => {
-                pwd = vec!["root"];
-            }
-            ["$", "cd", ".."] => {pwd.pop();},
-            ["$", "ls"] => (),
-            ["dir", _] => (),
+            ["$", "cd", "/"] => pwd = vec!["/"],
+            ["$", "cd", ".."] => _ = pwd.pop(),
+            ["$", "ls"] => {}
+            ["dir", _] => {}
             ["$", "cd", folder_name] => {
                 pwd.push(folder_name);
                 dirs.entry(pwd.join("/")).or_default();
             }
-            [size, _file_name] => {
-                pwd.iter().enumerate().for_each(|(i, _)| {
-                    // println!("file path: {}, size: {},file name: {_file_name}",&pwd[0..pwd.len() - i].join("/"), size);
-                    dirs.entry(pwd[0..pwd.len()-i].join("/"))
-                        .and_modify(|e| *e += size.parse::<i32>().unwrap());
-                })
-            }
+            [size, _file_name] => pwd.iter().enumerate().for_each(|(i, _)| {
+                dirs.entry(pwd[..pwd.len() - i].join("/"))
+                    .and_modify(|e| *e += size.parse::<i32>().unwrap());
+            }),
             _ => panic!("failed to parse line"),
         });
-    dirs
+    let available = 70_000_000 - dirs.get("/").unwrap();
+    let smallest = dirs
+        .clone()
         .into_values()
-        .filter(|n| *n <= 100_000)
-        .fold(0, |acc, v| acc + v)
+        .filter(|e| e + available > 30_000_000)
+        .min()
+        .unwrap();
+    (
+        dirs.into_values()
+            .filter(|n| *n <= 100_000)
+            .fold(0, |acc, v| acc + v),
+        smallest,
+    )
 }
 fn main() {
-    let input = std::fs::read_to_string("inputs/day7_2.txt").unwrap();
-    println!("example: {}",part_one(EXAMPLE_INPUT.to_string()));
-    println!("input : {}",part_one(input));
+    let (part_one, part_two) = day7(std::fs::read_to_string("inputs/day7.txt").unwrap());
+    println!("Part One: {}\nPart Two: {}",part_one,part_two)
 }
 #[test]
-fn part_one_example() {
-    assert_eq!(95437, part_one(EXAMPLE_INPUT.to_string()));
+fn example() {
+    let (part_one, part_two) = day7(EXAMPLE_INPUT.to_string());
+    assert_eq!(95437, part_one);
+    assert_eq!(24933642, part_two);
 }
 #[test]
-// #[ignore = "reason"]
 fn part_one_test() {
-    assert_eq!(
-        24933642,
-        part_one(std::fs::read_to_string("inputs/day7_2.txt").unwrap())
-    )
+    let (part_one, part_two) = day7(std::fs::read_to_string("inputs/day7.txt").unwrap());
+    assert_eq!(1444896, part_one);
+    assert_eq!(404395, part_two);
 }
