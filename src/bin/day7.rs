@@ -1,28 +1,5 @@
 const EXAMPLE_INPUT: &str = "$ cd /
 $ ls
-dir e
-14848514 b.txt
-8504156 c.dat
-dir d
-$ cd a
-$ ls
-dir e
-29116 f
-2557 g
-62596 h.lst
-$ cd e
-$ ls
-584 i
-$ cd ..
-$ cd ..
-$ cd d
-$ ls
-4060174 j
-8033020 d.log
-5626152 d.ext
-7214296 k";
-const EXAMPLE_INPUT_2: &str = "$ cd /
-$ ls
 dir a
 14848514 b.txt
 8504156 c.dat
@@ -76,12 +53,12 @@ fn part_one(input: String) -> i32 {
 }
 fn main() {
     let input = std::fs::read_to_string("inputs/day7_2.txt").unwrap();
-    part_one(EXAMPLE_INPUT.to_string());
-    part_one(input);
+    println!("example: {}",part_one(EXAMPLE_INPUT.to_string()));
+    println!("input : {}",part_one(input));
 }
 #[test]
 fn part_one_example() {
-    assert_eq!(95437, part_one(EXAMPLE_INPUT_2.to_string()));
+    assert_eq!(95437, part_one(EXAMPLE_INPUT.to_string()));
 }
 #[test]
 // #[ignore = "reason"]
