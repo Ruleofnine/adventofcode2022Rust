@@ -45,7 +45,7 @@ $ ls
 5626152 d.ext
 7214296 k";
 fn part_one(input: String) -> i32 {
-    let mut dirs: std::collections::HashMap<String, i32> = std::collections::HashMap::new();
+    let mut dirs: std::collections::BTreeMap<String, i32> = std::collections::BTreeMap::new();
     let mut pwd = vec![];
     input
         .lines()
@@ -53,9 +53,7 @@ fn part_one(input: String) -> i32 {
             ["$", "cd", "/"] => {
                 pwd = vec!["root"];
             }
-            ["$", "cd", ".."] => {
-                pwd.pop();
-            }
+            ["$", "cd", ".."] => {pwd.pop();},
             ["$", "ls"] => (),
             ["dir", _] => (),
             ["$", "cd", folder_name] => {
@@ -64,7 +62,7 @@ fn part_one(input: String) -> i32 {
             }
             [size, _file_name] => {
                 pwd.iter().enumerate().for_each(|(i, _)| {
-                    println!("file path: {}, size: {},file name: {_file_name}",&pwd[0..pwd.len() - i].join("/"), size);
+                    // println!("file path: {}, size: {},file name: {_file_name}",&pwd[0..pwd.len() - i].join("/"), size);
                     dirs.entry(pwd[0..pwd.len()-i].join("/"))
                         .and_modify(|e| *e += size.parse::<i32>().unwrap());
                 })
