@@ -21,13 +21,12 @@ $ ls
 8033020 d.log
 5626152 d.ext
 7214296 k";
-use std::collections::BTreeMap;
 fn day7(input: String) -> (i32, i32) {
-    let mut dirs: BTreeMap<String, i32> = BTreeMap::from([("/".to_string(), 0)]);
+    let mut dirs: std::collections::BTreeMap<String, i32> = std::collections::BTreeMap::from([("/".to_string(), 0)]);
     let mut pwd = vec!["/"];
     input
         .lines()
-        .for_each(|line| match line.split(" ").collect::<Vec<&str>>()[..] {
+        .for_each(|line| match &line.split(" ").collect::<Vec<&str>>()[..] {
             ["$", "cd", "/"] => pwd = vec!["/"],
             ["$", "cd", ".."] => _ = pwd.pop(),
             ["$", "ls"] => {}

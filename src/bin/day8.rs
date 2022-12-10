@@ -4,6 +4,7 @@ const EXAMPLE_INPUT: &str = "30373
 33549
 35390";
 use std::rc::Rc;
+
 use take_until::TakeUntilExt;
 #[derive(Debug)]
 struct Grid {
@@ -11,6 +12,38 @@ struct Grid {
     columns: Vec<Column>,
     max_length: usize,
     total_visible: usize,
+}
+#[derive(Debug)]
+struct Row {
+    trees: Vec<Rc<Tree>>,
+    max_height: usize,
+}
+impl CheckHieght for Row {
+    fn check_height(&mut self, height: usize) {
+        if height > self.max_height {
+            self.max_height = height;
+        }
+    }
+}
+#[derive(Debug)]
+struct Column {
+    trees: Vec<Rc<Tree>>,
+    max_height: usize,
+}
+impl CheckHieght for Column {
+    fn check_height(&mut self, height: usize) {
+        if height > self.max_height {
+            self.max_height = height;
+        }
+    }
+}
+#[derive(Debug)]
+struct Tree {
+    height: u32,
+    visible: bool,
+}
+pub trait CheckHieght {
+    fn check_height(&mut self, height: usize);
 }
 impl Grid {
     pub fn check_outter(&mut self, indexes: (usize, usize)) -> bool {
@@ -86,38 +119,7 @@ impl Grid {
         }
     }
 }
-#[derive(Debug)]
-struct Row {
-    trees: Vec<Rc<Tree>>,
-    max_height: usize,
-}
-impl CheckHieght for Row {
-    fn check_height(&mut self, height: usize) {
-        if height > self.max_height {
-            self.max_height = height;
-        }
-    }
-}
-#[derive(Debug)]
-struct Column {
-    trees: Vec<Rc<Tree>>,
-    max_height: usize,
-}
-impl CheckHieght for Column {
-    fn check_height(&mut self, height: usize) {
-        if height > self.max_height {
-            self.max_height = height;
-        }
-    }
-}
-#[derive(Debug)]
-struct Tree {
-    height: u32,
-    visible: bool,
-}
-pub trait CheckHieght {
-    fn check_height(&mut self, height: usize);
-}
+
 fn main() {
     let input = std::fs::read_to_string("inputs/day8.txt").unwrap();
     let mut grid = build_grid(input);
