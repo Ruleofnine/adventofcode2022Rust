@@ -1,3 +1,4 @@
+#![feature(int_roundings)]
 const EXAMPLE_INPUT: &str = "Monkey 0:
   Starting items: 79, 98
   Operation: new = old * 19
@@ -59,20 +60,10 @@ fn get_monkeys(input: &String) -> Vec<Monkey> {
     }
     monkeys
 }
-fn gcd(a: i64, b: i64) -> i64 {
-    if a == 0 {
-        return b;
-    }
-    if b == 0 {
-        return a;
-    }
-    gcd(b, a % b)
-}
-
 fn solution(input: &String, part_one_bool: bool) -> i64 {
     let mut monkeys = get_monkeys(input);
+    let lcd: i64 = monkeys.iter().map(|m| m.divide_num).product();
     let range;
-    let mut lcm = 1;
     range = match part_one_bool {
         true => 20,
         false => 10000,
@@ -96,21 +87,29 @@ fn solution(input: &String, part_one_bool: bool) -> i64 {
                     0 => monkeys[i].throw_true,
                     _ => monkeys[i].throw_false,
                 };
-                monkeys[throw_to].items.push(worry);
-                lcm = lcm * monkeys[i].divide_num / gcd(lcm, monkeys[i].divide_num);
-            }
-        }
-        if !part_one_bool {
-            for m in &mut monkeys {
-                m.items.iter_mut().for_each(|i| *i %= lcm);
+                let result = match part_one_bool {
+                    true => worry,
+                    false => worry % lcd,
+                };
+                monkeys[throw_to].items.push(result);
             }
         }
     }
-    monkeys.sort_by_key(|m| -m.inspects);
+    match part_one_bool {
+        true => monkeys.sort_by_key(|m| -m.inspects),
+        false => monkeys.sort_by_key(|m| -m.inspects * lcd),
+    }
     monkeys[0].inspects * monkeys[1].inspects
 }
 
-fn main() {}
+fn main() {
+    let input = include_str!("../../inputs/day11.txt").to_owned();
+    println!(
+        "Part One: {}\nPart Two: {}",
+        solution(&input, true),
+        solution(&input, false)
+    );
+}
 #[test]
 fn test_part_one_example() {
     assert_eq!(10605, solution(&EXAMPLE_INPUT.to_owned(), true))
