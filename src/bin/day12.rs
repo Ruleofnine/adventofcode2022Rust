@@ -58,12 +58,13 @@ impl Position {
     }
 }
 impl Position {
-    fn bfs(&mut self, input: &str, map_bound: usize, map_length: usize) -> i32 {
+    fn bfs(&mut self, input: &str, map_bound: usize, map_length: usize) -> (i32, Vec<char>) {
         let mut q = VecDeque::new();
         let mut total_steps = 0;
         let mut visted = vec![false; map_bound];
         let mut nodes_in_layer = 1;
         let mut nodes_in_next_layer = 0;
+        let mut prev = vec![];
         q.push_back(self);
         while let Some(parent) = q.pop_back() {
             nodes_in_next_layer =
@@ -72,9 +73,10 @@ impl Position {
             for node in &mut parent.next_nodes {
                 if node.character == 'E' {
                     total_steps += 1;
-                    return total_steps;
+                    return (total_steps, prev);
                 } else if !visted[node.position] {
                     visted[node.position] = true;
+                    prev.push(node.character);
                     q.push_front(node);
                 }
             }
@@ -84,7 +86,7 @@ impl Position {
                 total_steps += 1;
             }
         }
-        total_steps
+        (100000,prev)
     }
     fn add_positions(
         &mut self,
@@ -163,7 +165,8 @@ fn part_one(input: &str) -> i32 {
     let current_position = input.find('S').unwrap();
     // let end_position = input.find('E').unwrap();
     let mut starting_positon = Position::new('S', Direction::NONE, current_position, 1);
-    starting_positon.bfs(&input, map_bound, map_length)
+    let (steps, _) = starting_positon.bfs(&input, map_bound, map_length);
+    steps
 }
 fn part_two(input: &str) -> i32 {
     //completely unoptimized but idc atm...
@@ -174,17 +177,14 @@ fn part_two(input: &str) -> i32 {
         .enumerate()
         .filter_map(|(i, c)| if c == 'a' { Some(i) } else { None })
         .collect();
-    let mut test_vec = vec![];
     let mut min = 100000;
     for a in test {
-        let mut starting_positon = Position::new('a', Direction::NONE, a, 1);
-        let amount = starting_positon.bfs(&input, map_bound, map_length);
-        // dbg!((&input[a..a + 1], amount));
-        //technically working, idk why it gives all the low numbers and idc atm....
-        if amount.min(min) < min && amount > 200{
-            min = amount.min(min);
-            test_vec.push(starting_positon);
-        };
+            let mut starting_positon = Position::new('a', Direction::NONE, a, 1);
+            let (amount, prev) = starting_positon.bfs(&input, map_bound, map_length);
+            // dbg!((&input[a..a + 1], amount));
+            if amount.min(min) < min {
+                min = amount.min(min);
+            }
     }
     min
 }
@@ -193,3 +193,14 @@ fn main() {
     // let input = EXAMPLE_INPUT;
     dbg!(part_two(&input));
 }
+#[test]
+fn part_one_test(){
+    assert_eq!(339,part_one(& std::fs::read_to_string("inputs/day12.txt").unwrap()));
+    assert_eq!(31,part_one(&EXAMPLE_INPUT));
+}
+#[test]
+fn part_two_test(){
+    assert_eq!(332,part_two(& std::fs::read_to_string("inputs/day12.txt").unwrap()));
+    assert_eq!(29,part_two(&EXAMPLE_INPUT));
+}
+
